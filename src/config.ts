@@ -11,6 +11,7 @@ const DEFAULT_CONFIG: Config = {
     exclude: [],
   },
   forms: [],
+  buttons: [],
   checks: {
     noServerError: true,
     formFuzzing: true,
@@ -48,6 +49,7 @@ function mergeConfig(defaults: Config, overrides: Partial<Config>): Config {
       exclude: overrides.paths?.exclude ?? defaults.paths.exclude,
     },
     forms: overrides.forms ?? defaults.forms,
+    buttons: overrides.buttons ?? defaults.buttons,
     checks: {
       ...defaults.checks,
       ...overrides.checks,
@@ -105,6 +107,15 @@ export function validateConfig(config: Config): string[] {
     }
     if (!form.submit) {
       errors.push("Form submit selector is required");
+    }
+  }
+
+  for (const button of config.buttons) {
+    if (!button.path) {
+      errors.push("Button path is required");
+    }
+    if (!button.selector) {
+      errors.push("Button selector is required");
     }
   }
 

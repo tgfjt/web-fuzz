@@ -1,4 +1,4 @@
-# simple-app用の設定
+# calm-tools用の設定
 baseUrl: http://localhost:4321
 
 numRuns: 20
@@ -11,6 +11,17 @@ paths:
     - /breath
     - /grounding
   exclude: []
+
+# ボタン連打チェック対象
+buttons:
+  - path: /breath
+    selector: button:has-text("開始")
+  - path: /breath
+    selector: button:has-text("リセット")
+  - path: /grounding
+    selector: button:has-text("開始")
+  - path: /grounding
+    selector: button:has-text("リセット")
 
 checks:
   noServerError: true

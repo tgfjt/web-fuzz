@@ -34,6 +34,12 @@ export interface FormConfig {
   submit: string;
 }
 
+// ボタン設定（連打チェック用）
+export interface ButtonConfig {
+  path: string;
+  selector: string;
+}
+
 // チェック設定
 export interface ChecksConfig {
   noServerError?: boolean;
@@ -67,6 +73,7 @@ export interface Config {
   auth?: AuthConfig;
   paths: PathConfig;
   forms: FormConfig[];
+  buttons: ButtonConfig[];
   checks: ChecksConfig;
   checkOptions?: CheckOptions;
   customChecks?: string[];

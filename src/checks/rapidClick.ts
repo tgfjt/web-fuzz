@@ -2,18 +2,35 @@ import type { Page } from "playwright";
 import * as fc from "fast-check";
 import type { Config, CheckResult } from "../types.ts";
 
+interface ClickTarget {
+  path: string;
+  selector: string;
+}
+
 export async function rapidClick(
   page: Page,
   config: Config,
   options?: { seed?: number; numRuns?: number }
 ): Promise<CheckResult> {
-  if (config.forms.length === 0) {
+  // forms と buttons の両方からクリック対象を収集
+  const targets: ClickTarget[] = [
+    ...config.forms.map((form) => ({
+      path: form.path,
+      selector: config.checkOptions?.rapidClick?.targetSelector ?? form.submit,
+    })),
+    ...config.buttons.map((button) => ({
+      path: button.path,
+      selector: button.selector,
+    })),
+  ];
+
+  if (targets.length === 0) {
     return {
       check: "rapidClick",
       status: "skip",
       runs: 0,
       duration: 0,
-      error: "No forms configured",
+      error: "No forms or buttons configured",
     };
   }
 
@@ -37,22 +54,20 @@ export async function rapidClick(
     await fc.assert(
       fc.asyncProperty(
         fc.record({
-          formIndex: fc.nat({ max: config.forms.length - 1 }),
+          targetIndex: fc.nat({ max: targets.length - 1 }),
           clicks: fc.integer({ min: 2, max: maxClicks }),
         }),
-        async ({ formIndex, clicks }) => {
+        async ({ targetIndex, clicks }) => {
           runCount++;
           pageErrors.length = 0;
 
-          const form = config.forms[formIndex];
-          await page.goto(`${config.baseUrl}${form.path}`, {
+          const target = targets[targetIndex];
+          await page.goto(`${config.baseUrl}${target.path}`, {
             timeout: config.timeout,
             waitUntil: "domcontentloaded",
           });
 
-          const targetSelector =
-            config.checkOptions?.rapidClick?.targetSelector ?? form.submit;
-          const button = page.locator(targetSelector).first();
+          const button = page.locator(target.selector).first();
 
           const isVisible = await button.isVisible().catch(() => false);
           if (!isVisible) {

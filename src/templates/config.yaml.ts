@@ -37,12 +37,19 @@ forms: []
   #   selector: form
   #   submit: button[type="submit"]
 
+# ボタン連打チェック対象（フォーム以外のボタン）
+buttons: []
+  # - path: /
+  #   selector: button:has-text("開始")
+  # - path: /
+  #   selector: button:has-text("リセット")
+
 # 有効にするチェック
 checks:
   noServerError: true
   formFuzzing: false       # formsが設定されたらtrueに
   historyNavigation: true
-  rapidClick: false        # formsが設定されたらtrueに
+  rapidClick: false        # forms または buttons が設定されたらtrueに
   queryParamFuzzing: true
   reloadStateRestore: false
 
