@@ -1,0 +1,17 @@
+{
+  "name": "@internal/web-fuzz",
+  "version": "1.0.0",
+  "exports": "./src/index.ts",
+  "tasks": {
+    "start": "deno run -A src/index.ts",
+    "compile": "deno compile -A -o web-fuzz src/index.ts"
+  },
+  "imports": {
+    "playwright": "npm:playwright@^1.40.0",
+    "fast-check": "npm:fast-check@^3.15.0",
+    "@std/yaml": "jsr:@std/yaml@^1.0.0",
+    "@std/path": "jsr:@std/path@^1.0.0",
+    "@std/cli": "jsr:@std/cli@^1.0.0",
+    "chalk": "npm:chalk@^5.3.0"
+  }
+}
