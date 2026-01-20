@@ -12,6 +12,12 @@ paths:
     - /grounding
   exclude: []
 
+# フォームファジング対象
+forms:
+  - path: /grounding
+    selector: '[data-testid="grounding-step-form"]'
+    submit: '[data-testid="grounding-next-btn"]'
+
 # ボタン連打チェック対象
 buttons:
   - path: /breath
@@ -19,13 +25,13 @@ buttons:
   - path: /breath
     selector: button:has-text("リセット")
   - path: /grounding
-    selector: button:has-text("開始")
+    selector: button:has-text("はじめる")
   - path: /grounding
-    selector: button:has-text("リセット")
+    selector: '[data-testid="grounding-next-btn"]'
 
 checks:
   noServerError: true
-  formFuzzing: false
+  formFuzzing: true
   historyNavigation: true
   rapidClick: true
   queryParamFuzzing: true
