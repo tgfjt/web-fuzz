@@ -1,0 +1,23 @@
+# simple-app用の設定
+baseUrl: http://localhost:4321
+
+numRuns: 20
+timeout: 5000
+headless: true
+
+paths:
+  include:
+    - /
+    - /breath
+    - /grounding
+  exclude: []
+
+checks:
+  noServerError: true
+  formFuzzing: false
+  historyNavigation: true
+  rapidClick: true
+  queryParamFuzzing: true
+  reloadStateRestore: true
+
+reporter: console

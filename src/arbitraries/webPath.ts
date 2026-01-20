@@ -89,7 +89,7 @@ export const queryParamsArbitrary = (): fc.Arbitrary<Record<string, string>> =>
     fc.stringOf(fc.constantFrom(...PATH_CHARS.split('')), { minLength: 1, maxLength: 20 }),
     fc.oneof(
       fc.string(),
-      fc.stringify(fc.jsonValue()),
+      fc.json().map((j) => JSON.stringify(j)),
       fc.constant(''),
       fc.constant('null'),
       fc.constant('undefined'),
