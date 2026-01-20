@@ -1,8 +1,11 @@
-import { chromium, type Browser, type Page } from "playwright";
-import type { Config, CliOptions, Report, CheckResult } from "./types.ts";
-import { checks } from "./checks/index.ts";
+import { chromium, type Browser, type BrowserContext, type Page } from "playwright";
+import { dirname, resolve } from "@std/path";
+import type { Config, CliOptions, Report, CheckResult, CheckFunction } from "./types.ts";
+import { checks as builtinChecks } from "./checks/index.ts";
+import { loadCustomChecks } from "./checks/custom.ts";
 import { report as outputReport } from "./reporters/index.ts";
 import { VERSION } from "./cli.ts";
+import { authenticate } from "./auth/index.ts";
 
 interface RunnerOptions {
   config: Config;
@@ -13,7 +16,20 @@ export async function run({ config, cli }: RunnerOptions): Promise<Report> {
   const seed = cli.seed ?? Date.now();
   const results: CheckResult[] = [];
 
+  // Load custom checks if configured
+  const configDir = dirname(resolve(cli.config));
+  const customChecks = config.customChecks
+    ? await loadCustomChecks(config.customChecks, configDir)
+    : {};
+
+  // Merge builtin and custom checks
+  const allChecks: Record<string, CheckFunction> = {
+    ...builtinChecks,
+    ...customChecks,
+  };
+
   let browser: Browser | undefined;
+  let context: BrowserContext | undefined;
   let page: Page | undefined;
 
   try {
@@ -21,7 +37,7 @@ export async function run({ config, cli }: RunnerOptions): Promise<Report> {
       headless: config.headless,
     });
 
-    const context = await browser.newContext({
+    context = await browser.newContext({
       ignoreHTTPSErrors: true,
     });
 
@@ -30,11 +46,22 @@ export async function run({ config, cli }: RunnerOptions): Promise<Report> {
     // Set default timeout
     page.setDefaultTimeout(config.timeout);
 
+    // Authenticate if configured
+    if (config.auth) {
+      if (cli.verbose) {
+        console.log(`Authenticating with ${config.auth.type}...`);
+      }
+      const authSuccess = await authenticate(context, page, config);
+      if (!authSuccess) {
+        console.warn("Warning: Authentication may have failed");
+      }
+    }
+
     // Determine which checks to run
-    const checksToRun = getChecksToRun(config, cli.check);
+    const checksToRun = getChecksToRun(config, allChecks, cli.check);
 
     for (const checkName of checksToRun) {
-      const checkFn = checks[checkName];
+      const checkFn = allChecks[checkName];
       if (!checkFn) {
         console.error(`Unknown check: ${checkName}`);
         continue;
@@ -54,6 +81,9 @@ export async function run({ config, cli }: RunnerOptions): Promise<Report> {
   } finally {
     if (page) {
       await page.close().catch(() => {});
+    }
+    if (context) {
+      await context.close().catch(() => {});
     }
     if (browser) {
       await browser.close().catch(() => {});
@@ -77,14 +107,18 @@ export async function run({ config, cli }: RunnerOptions): Promise<Report> {
   };
 
   // Output report
-  outputReport(report, config.reporter);
+  await outputReport(report, config.reporter);
 
   return report;
 }
 
-function getChecksToRun(config: Config, specificCheck?: string): string[] {
+function getChecksToRun(
+  config: Config,
+  allChecks: Record<string, CheckFunction>,
+  specificCheck?: string
+): string[] {
   if (specificCheck) {
-    if (!checks[specificCheck]) {
+    if (!allChecks[specificCheck]) {
       throw new Error(`Unknown check: ${specificCheck}`);
     }
     return [specificCheck];
@@ -92,6 +126,7 @@ function getChecksToRun(config: Config, specificCheck?: string): string[] {
 
   const enabledChecks: string[] = [];
 
+  // Built-in checks
   if (config.checks.noServerError) {
     enabledChecks.push("noServerError");
   }
@@ -109,6 +144,16 @@ function getChecksToRun(config: Config, specificCheck?: string): string[] {
   }
   if (config.checks.reloadStateRestore) {
     enabledChecks.push("reloadStateRestore");
+  }
+
+  // Custom checks (always enabled if configured)
+  if (config.customChecks) {
+    for (const checkPath of config.customChecks) {
+      const checkName = checkPath.split("/").pop()?.replace(/\.[^.]+$/, "") ?? "";
+      if (checkName && allChecks[checkName]) {
+        enabledChecks.push(checkName);
+      }
+    }
   }
 
   return enabledChecks;

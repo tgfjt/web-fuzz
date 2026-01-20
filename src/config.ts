@@ -53,6 +53,7 @@ function mergeConfig(defaults: Config, overrides: Partial<Config>): Config {
       ...overrides.checks,
     },
     checkOptions: overrides.checkOptions,
+    customChecks: overrides.customChecks,
     reporter: overrides.reporter ?? defaults.reporter,
   };
 }

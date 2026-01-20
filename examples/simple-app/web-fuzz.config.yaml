@@ -1,0 +1,28 @@
+# simple-app用の設定
+baseUrl: http://localhost:8080
+
+numRuns: 20
+timeout: 5000
+headless: true
+
+paths:
+  include:
+    - /
+    - /about
+    - /contact
+  exclude: []
+
+forms:
+  - path: /contact
+    selector: "#contact-form"
+    submit: button[type="submit"]
+
+checks:
+  noServerError: true
+  formFuzzing: true
+  historyNavigation: true
+  rapidClick: true
+  queryParamFuzzing: true
+  reloadStateRestore: false
+
+reporter: console

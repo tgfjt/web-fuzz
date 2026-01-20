@@ -10,6 +10,7 @@ Webアプリケーションの普遍的な性質をProperty-Based Testing / Fuzz
 Usage: web-fuzz [options]
 
 Options:
+  --init                  設定ファイルのテンプレートを生成
   -c, --config <path>     設定ファイルパス (default: "web-fuzz.config.yaml")
   -n, --num-runs <n>      試行回数を上書き
   -s, --seed <seed>       乱数シード（再現用）
@@ -21,19 +22,17 @@ Options:
   --version               バージョン表示
 
 Examples:
+  ./web-fuzz --init                       # 設定ファイルを生成
   ./web-fuzz                              # デフォルト設定で実行
   ./web-fuzz -n 100                       # 100回試行
   ./web-fuzz --check formFuzzing          # フォームファジングのみ
   ./web-fuzz --seed 12345 --reporter json # CI用
-
-  # または deno task 経由
-  deno task start --config web-fuzz.config.yaml
 `;
 
 export function parseCliArgs(args: string[]): CliOptions {
   const parsed = parseArgs(args, {
     string: ["config", "num-runs", "seed", "check", "reporter"],
-    boolean: ["headless", "verbose", "help", "version"],
+    boolean: ["headless", "verbose", "help", "version", "init"],
     alias: {
       c: "config",
       n: "num-runs",
@@ -88,6 +87,7 @@ export function parseCliArgs(args: string[]): CliOptions {
     reporter,
     headless: parsed.headless,
     verbose: parsed.verbose,
+    init: parsed.init,
   };
 }
 

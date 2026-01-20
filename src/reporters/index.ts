@@ -1,8 +1,9 @@
 import type { Report, ReporterType } from "../types.ts";
 import { consoleReporter } from "./console.ts";
 import { jsonReporter } from "./json.ts";
+import { htmlReporter } from "./html.ts";
 
-export function report(report: Report, type: ReporterType): void {
+export async function report(report: Report, type: ReporterType): Promise<void> {
   switch (type) {
     case "console":
       consoleReporter(report);
@@ -11,11 +12,9 @@ export function report(report: Report, type: ReporterType): void {
       jsonReporter(report);
       break;
     case "html":
-      // HTML reporter not implemented yet
-      console.log("HTML reporter is not implemented yet");
-      consoleReporter(report);
+      await htmlReporter(report);
       break;
   }
 }
 
-export { consoleReporter, jsonReporter };
+export { consoleReporter, jsonReporter, htmlReporter };

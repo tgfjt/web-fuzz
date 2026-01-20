@@ -69,6 +69,7 @@ export interface Config {
   forms: FormConfig[];
   checks: ChecksConfig;
   checkOptions?: CheckOptions;
+  customChecks?: string[];
   reporter: ReporterType;
 }
 
@@ -81,6 +82,7 @@ export interface CliOptions {
   reporter?: ReporterType;
   headless: boolean;
   verbose: boolean;
+  init: boolean;
 }
 
 // チェック結果

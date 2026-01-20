@@ -1,9 +1,32 @@
 import { parseCliArgs } from "./cli.ts";
 import { loadConfig, applyCliOverrides, validateConfig } from "./config.ts";
 import { run } from "./runner.ts";
+import { CONFIG_TEMPLATE } from "./templates/config.yaml.ts";
+
+async function initConfig(configPath: string): Promise<void> {
+  try {
+    await Deno.stat(configPath);
+    console.error(`Error: ${configPath} already exists`);
+    Deno.exit(1);
+  } catch (error) {
+    if (!(error instanceof Deno.errors.NotFound)) {
+      throw error;
+    }
+  }
+
+  await Deno.writeTextFile(configPath, CONFIG_TEMPLATE);
+  console.log(`Created ${configPath}`);
+  console.log("Edit this file to configure web-fuzz for your project.");
+}
 
 async function main() {
   const cli = parseCliArgs(Deno.args);
+
+  // Handle --init
+  if (cli.init) {
+    await initConfig(cli.config);
+    return;
+  }
 
   // Load config
   const rawConfig = await loadConfig(cli.config);
