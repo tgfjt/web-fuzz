@@ -36,6 +36,19 @@ deno run -A src/index.ts --init
 deno run -A src/index.ts
 ```
 
+## 外部リポジトリで使う
+
+対象アプリのリポジトリに `web-fuzz.config.yaml` を置いて実行できます。
+
+```bash
+cd your-app/
+# 設定ファイルを生成
+deno run -A https://raw.githubusercontent.com/tgfjt/web-fuzz/main/src/index.ts --init
+
+# baseUrl等を編集して実行
+deno run -A https://raw.githubusercontent.com/tgfjt/web-fuzz/main/src/index.ts
+```
+
 ## チェック項目
 
 | チェック | 検証内容 | 検出できる問題 |
@@ -151,7 +164,7 @@ Results: 6/6 passed
 - name: Run web-fuzz
   run: |
     npx playwright install chromium
-    deno run -A src/index.ts --seed 12345 --reporter json > fuzz-report.json
+    deno run -A https://raw.githubusercontent.com/tgfjt/web-fuzz/main/src/index.ts --seed 12345 --reporter json > fuzz-report.json
 ```
 
 シード固定で再現性を確保、JSON出力で結果をパースできます。

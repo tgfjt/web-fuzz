@@ -1,4 +1,9 @@
 export const CONFIG_TEMPLATE = `# web-fuzz.config.yaml
+#
+# 実行:
+#   deno run -A https://raw.githubusercontent.com/tgfjt/web-fuzz/main/src/index.ts
+#
+# 初回のみ: npx playwright install chromium
 
 baseUrl: http://localhost:3000
 
