@@ -41,6 +41,9 @@ forms: []
   # - path: /contact
   #   selector: form
   #   submit: button[type="submit"]
+  #   setup:                          # フォーム表示前の操作（オプション）
+  #     - click: button:has-text("開始")
+  #     - waitFor: form
 
 # ボタン連打チェック対象（フォーム以外のボタン）
 buttons: []

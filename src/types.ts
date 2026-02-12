@@ -27,11 +27,18 @@ export interface PathConfig {
   exclude: string[];
 }
 
+// セットアップアクション（フォーム表示前の操作）
+export interface SetupAction {
+  click?: string;
+  waitFor?: string;
+}
+
 // フォーム設定
 export interface FormConfig {
   path: string;
   selector: string;
   submit: string;
+  setup?: SetupAction[];
 }
 
 // ボタン設定（連打チェック用）

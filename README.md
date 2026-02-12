@@ -54,7 +54,7 @@ deno run -A https://raw.githubusercontent.com/tgfjt/web-fuzz/main/src/index.ts
 | チェック | 検証内容 | 検出できる問題 |
 |----------|----------|----------------|
 | noServerError | 全ページにアクセスして500エラーが出ないか | ルーティングミス、未処理例外 |
-| formFuzzing | フォームに攻撃的な文字列を入力してクラッシュしないか | XSS、バリデーション漏れ |
+| formFuzzing | フォームに攻撃的な文字列を入力してクラッシュしないか（`setup`で事前操作も可） | XSS、バリデーション漏れ |
 | queryParamFuzzing | 不正なクエリパラメータでアクセスしても壊れないか | URLパーサーのバグ |
 | historyNavigation | 戻る/進むを繰り返しても状態が壊れないか | SPA履歴管理のバグ |
 | rapidClick | ボタン連打で二重送信やクラッシュが起きないか | Race condition、UIロック漏れ |
@@ -86,6 +86,12 @@ forms:
   - path: /contact
     selector: form
     submit: button[type="submit"]
+  - path: /app
+    selector: form
+    submit: button[type="submit"]
+    setup:                           # フォーム表示前の操作
+      - click: button:has-text("開始")
+      - waitFor: form
 
 # ボタン連打チェック対象（フォーム以外）
 buttons:

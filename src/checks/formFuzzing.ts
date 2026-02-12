@@ -1,6 +1,6 @@
 import type { Page } from "npm:playwright@^1.40.0";
 import * as fc from "npm:fast-check@^3.15.0";
-import type { Config, CheckResult } from "../types.ts";
+import type { Config, CheckResult, SetupAction } from "../types.ts";
 import { maliciousStringArb } from "../arbitraries/index.ts";
 
 export async function formFuzzing(
@@ -57,6 +57,18 @@ export async function formFuzzing(
             timeout: config.timeout,
             waitUntil: "domcontentloaded",
           });
+
+          // セットアップアクションを実行（フォーム表示前の操作）
+          if (form.setup) {
+            for (const action of form.setup) {
+              if (action.click) {
+                await page.locator(action.click).first().click({ timeout: config.timeout });
+              }
+              if (action.waitFor) {
+                await page.locator(action.waitFor).first().waitFor({ timeout: config.timeout });
+              }
+            }
+          }
 
           // Find all input fields in the form
           const fields = await page
