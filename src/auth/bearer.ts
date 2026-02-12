@@ -1,4 +1,4 @@
-import type { BrowserContext } from "playwright";
+import type { BrowserContext } from "npm:playwright@^1.40.0";
 import type { Config } from "../types.ts";
 
 export async function authenticateWithBearer(

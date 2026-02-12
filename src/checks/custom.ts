@@ -1,5 +1,5 @@
 import type { CheckFunction } from "../types.ts";
-import { resolve, dirname, fromFileUrl } from "@std/path";
+import { resolve, dirname, fromFileUrl } from "jsr:@std/path@^1.0.0";
 
 export async function loadCustomChecks(
   customCheckPaths: string[],

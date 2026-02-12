@@ -1,5 +1,5 @@
-import type { Page } from "playwright";
-import type * as fc from "fast-check";
+import type { Page } from "npm:playwright@^1.40.0";
+import type * as fc from "npm:fast-check@^3.15.0";
 
 // 認証タイプ
 export type AuthType = "form" | "cookie" | "bearer";

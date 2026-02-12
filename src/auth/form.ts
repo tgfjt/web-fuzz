@@ -1,4 +1,4 @@
-import type { Page } from "playwright";
+import type { Page } from "npm:playwright@^1.40.0";
 import type { AuthConfig, Config } from "../types.ts";
 
 export async function authenticateWithForm(

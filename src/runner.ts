@@ -1,5 +1,5 @@
-import { chromium, type Browser, type BrowserContext, type Page } from "playwright";
-import { dirname, resolve } from "@std/path";
+import { chromium, type Browser, type BrowserContext, type Page } from "npm:playwright@^1.40.0";
+import { dirname, resolve } from "jsr:@std/path@^1.0.0";
 import type { Config, CliOptions, Report, CheckResult, CheckFunction } from "./types.ts";
 import { checks as builtinChecks } from "./checks/index.ts";
 import { loadCustomChecks } from "./checks/custom.ts";

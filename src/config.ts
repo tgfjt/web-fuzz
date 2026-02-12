@@ -1,4 +1,4 @@
-import { parse as parseYaml } from "@std/yaml";
+import { parse as parseYaml } from "jsr:@std/yaml@^1.0.0";
 import type { Config, CliOptions } from "./types.ts";
 
 const DEFAULT_CONFIG: Config = {

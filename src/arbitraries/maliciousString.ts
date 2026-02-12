@@ -1,4 +1,4 @@
-import * as fc from "fast-check";
+import * as fc from "npm:fast-check@^3.15.0";
 
 export const maliciousStringArb = (): fc.Arbitrary<string> =>
   fc.oneof(

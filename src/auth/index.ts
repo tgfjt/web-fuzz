@@ -1,4 +1,4 @@
-import type { BrowserContext, Page } from "playwright";
+import type { BrowserContext, Page } from "npm:playwright@^1.40.0";
 import type { Config } from "../types.ts";
 import { authenticateWithForm } from "./form.ts";
 import { authenticateWithCookie } from "./cookie.ts";

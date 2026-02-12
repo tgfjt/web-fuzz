@@ -1,4 +1,4 @@
-import * as fc from "fast-check";
+import * as fc from "npm:fast-check@^3.15.0";
 import type { PathConfig } from "../types.ts";
 
 const PATH_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789-_';

@@ -1,5 +1,5 @@
-import type { Page } from "playwright";
-import * as fc from "fast-check";
+import type { Page } from "npm:playwright@^1.40.0";
+import * as fc from "npm:fast-check@^3.15.0";
 import type { Config, CheckResult } from "../types.ts";
 import { pathArbitrary } from "../arbitraries/index.ts";
 

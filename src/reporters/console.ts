@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import chalk from "npm:chalk@^5.3.0";
 import type { Report, CheckResult } from "../types.ts";
 import { VERSION } from "../cli.ts";
 

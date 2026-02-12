@@ -1,4 +1,4 @@
-import { parseArgs } from "@std/cli";
+import { parseArgs } from "jsr:@std/cli@^1.0.0";
 import type { CliOptions, ReporterType } from "./types.ts";
 
 const VERSION = "1.0.0";
